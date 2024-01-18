@@ -3,7 +3,8 @@
 **TABLE OF CONTENTS**
 
 - [Firebase](#firebase)
-  - [Install](#install)
+  - [How to setup on console.firebase](#how-to-setup-on-consolefirebase)
+  - [How to setup in app](#how-to-setup-in-app)
   - [Some methods from firebase \& firebase-hooks](#some-methods-from-firebase--firebase-hooks)
   - [How to init](#how-to-init)
   - [How to use authentication](#how-to-use-authentication)
@@ -15,7 +16,15 @@
 
 # Firebase
 
-## Install
+## How to setup on console.firebase
+
+[Console firebase](https://console.firebase.google.com)
+
+- Build -> Authentication -> Sign-in method
+- Build -> Authentication -> Settings -> Authorized domains: add deployed domain
+- Build -> Firestore Database
+
+## How to setup in app
 
 [react-firebase-hooks](https://www.npmjs.com/package/react-firebase-hooks)
 
