@@ -6,6 +6,9 @@ import { IconButton } from "@chakra-ui/button";
 import { Flex, Text } from "@chakra-ui/layout";
 import { ArrowLeftIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
+import { signOut } from "firebase/auth";
+
+import { auth } from "@/firebaseconfig";
 
 export function Sidebar() {
   // const router = useRouter();
@@ -65,6 +68,7 @@ export function Sidebar() {
           size="sm"
           isRound
           icon={<ArrowLeftIcon />}
+          onClick={() => signOut(auth)}
         />
       </Flex>
 
