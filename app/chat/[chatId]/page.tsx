@@ -1,11 +1,14 @@
 "use client";
 
 import { Flex, Text } from "@chakra-ui/react";
+import { collection, doc, orderBy, query } from "firebase/firestore";
+import { useParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useParams } from "next/navigation";
-import { collection, doc, orderBy, query } from "firebase/firestore";
-import { useCollectionData, useDocumentData } from "react-firebase-hooks/firestore";
+import {
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
 
 import { BottomBar, TopBar } from "@/components/molecules";
 import { Sidebar } from "@/components/organisms";
@@ -15,7 +18,9 @@ import { getOtherEmails } from "@/utils/getOtherEmails";
 export default function Chat() {
   const params = useParams();
   const { chatId } = params;
+
   const [chat] = useDocumentData(doc(db, "chats", chatId as string));
+
   const q = query(
     collection(db, `chats/${chatId}/messages`),
     orderBy("timestamp")
@@ -78,7 +83,7 @@ export default function Chat() {
           <div ref={bottomOfChat}></div>
         </Flex>
 
-        <BottomBar id={chatId as string} user={{}} />
+        <BottomBar id={chatId as string} user={user} />
       </Flex>
     </Flex>
   );

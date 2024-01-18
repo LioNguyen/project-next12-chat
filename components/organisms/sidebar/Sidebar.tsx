@@ -1,16 +1,16 @@
 "use client";
 
 import { Avatar } from "@chakra-ui/avatar";
-import { Button } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/button";
-import { Flex, Text } from "@chakra-ui/layout";
 import { ArrowLeftIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/navigation";
+import { Flex, Text } from "@chakra-ui/layout";
+import { Button } from "@chakra-ui/react";
 import { signOut } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { useEffect, useState } from "react";
 
 import { auth, db } from "@/firebaseconfig";
 import { getOtherEmails } from "@/utils/getOtherEmails";
@@ -20,9 +20,8 @@ export function Sidebar() {
   const [isMounted, setIsMounted] = useState(false);
   const [user] = useAuthState(auth);
   const [snapshot, loading, error] = useCollection(collection(db, "chats"));
-  const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-  console.log("🚀 @log ~ Sidebar ~ chats:", chats);
+  const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
   useEffect(() => {
     setIsMounted(true);

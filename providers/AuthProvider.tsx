@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Center, ChakraProvider, Spinner } from "@chakra-ui/react";
 
@@ -9,8 +9,19 @@ import { Login } from "@/components/pages";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, loading, error] = useAuthState(auth);
+  const [isMounted, setIsMounted] = useState(false);
 
-  console.log("🚀 @log ~ AuthProvider ~ user:", user);
+  if (process.env.NODE_ENV === "development") {
+    console.log("🚀 @log ~ AuthProvider ~ user:", user);
+  }
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return <></>;
+  }
 
   const renderChildren = () => {
     if (loading) {

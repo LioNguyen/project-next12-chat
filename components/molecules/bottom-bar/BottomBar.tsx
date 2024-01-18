@@ -1,5 +1,8 @@
+import { Button, FormControl, Input } from "@chakra-ui/react";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { FormEvent, useState } from "react";
-import { FormControl, Input, Button } from "@chakra-ui/react";
+
+import { db } from "@/firebaseconfig";
 
 interface BottomBarProps {
   id: string;
@@ -11,11 +14,11 @@ export function BottomBar({ id, user }: BottomBarProps) {
 
   const sendMessage = async (e: FormEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // await addDoc(collection(db, `chats/${id}/messages`), {
-    //   text: input,
-    //   sender: user.email,
-    //   timestamp: serverTimestamp()
-    // })
+    await addDoc(collection(db, `chats/${id}/messages`), {
+      text: input,
+      sender: user.email,
+      timestamp: serverTimestamp(),
+    });
     setInput("");
   };
 
