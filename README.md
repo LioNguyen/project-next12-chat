@@ -4,9 +4,10 @@
 
 - [Install](#install)
 - [How to init](#how-to-init)
-- [How to setup authentication](#how-to-setup-authentication)
+- [How to use authentication](#how-to-use-authentication)
   - [Login](#login)
   - [Sign out](#sign-out)
+  - [Get user info](#get-user-info)
 
 #Firebase
 
@@ -41,7 +42,7 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 ```
 
-## How to setup authentication
+## How to use authentication
 
 ### Login
 
@@ -110,5 +111,24 @@ export function Sidebar() {
       onClick={() => signOut(auth)}
     />
   );
+}
+```
+
+### Get user info
+
+```js
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import { auth } from "@/firebaseconfig";
+
+export function SideBar() {
+  const [user] = useAuthState(auth);
+
+  return (
+    <Flex align="center">
+      <Avatar src={user!.photoURL || undefined} marginEnd={3} />
+      <Text>{user!.displayName}</Text>
+    </Flex>
+  )
 }
 ```

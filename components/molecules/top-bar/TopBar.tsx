@@ -1,7 +1,7 @@
 import { Flex, Heading, Avatar } from "@chakra-ui/react";
 
 interface TopBarProps {
-  email: string;
+  email: any;
 }
 
 export function TopBar({ email }: TopBarProps) {

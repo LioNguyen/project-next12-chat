@@ -5,38 +5,65 @@ import { Button } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/button";
 import { Flex, Text } from "@chakra-ui/layout";
 import { ArrowLeftIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { useEffect, useState } from "react";
 
-import { auth } from "@/firebaseconfig";
+import { auth, db } from "@/firebaseconfig";
+import { getOtherEmails } from "@/utils/getOtherEmails";
 
 export function Sidebar() {
-  // const router = useRouter();
+  const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
+  const [user] = useAuthState(auth);
+  const [snapshot, loading, error] = useCollection(collection(db, "chats"));
+  const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-  // const redirect = (id: string) => {
-  //   router.push(`/chat/${id}`);
-  // };
+  console.log("🚀 @log ~ Sidebar ~ chats:", chats);
 
-  // const chatExists = email => chats?.find(chat => (chat.users.includes(user.email) && chat.users.includes(email)))
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted || !user) {
+    return <></>;
+  }
+
+  const redirect = (id: string) => {
+    router.push(`/chat/${id}`);
+  };
+
+  const chatExists = (email: string) =>
+    chats?.find(
+      (chat: any) =>
+        chat.users.includes(user.email) && chat.users.includes(email)
+    );
 
   const newChat = async () => {
-    // const input = prompt("Enter email of chat recipient");
-    // if (!chatExists(input) && (input != user.email)) {
-    //   await addDoc(collection(db, "chats"), { users: [user.email, input] })
-    // }
+    const input = prompt("Enter email of chat recipient") || "";
+    if (!chatExists(input) && input != user.email) {
+      await addDoc(collection(db, "chats"), { users: [user.email, input] });
+    }
   };
 
   const chatList = () => {
-    // return (
-    //   chats?.filter(chat => chat.users.includes(user.email))
-    //   .map(
-    //     chat =>
-    //       <Flex key={Math.random()} p={3} align="center" _hover={{bg: "gray.100", cursor: "pointer"}} onClick={() => redirect(chat.id)}>
-    //         <Avatar src="" marginEnd={3} />
-    //         <Text>{getOtherEmail(chat.users, user)}</Text>
-    //       </Flex>
-    //   )
-    // )
+    return chats
+      ?.filter((chat: any) => chat?.users.includes(user!.email))
+      .map((chat: any) => (
+        <Flex
+          key={Math.random()}
+          p={3}
+          align="center"
+          _hover={{ bg: "gray.100", cursor: "pointer" }}
+          onClick={() => redirect(chat.id)}
+        >
+          <Avatar src="" marginEnd={3} />
+          <Text>{getOtherEmails(chat?.users, user)}</Text>
+        </Flex>
+      ));
   };
 
   return (
@@ -59,8 +86,8 @@ export function Sidebar() {
         p={3}
       >
         <Flex align="center">
-          {/* <Avatar src={user.photoURL} marginEnd={3} />
-          <Text>{user.displayName}</Text> */}
+          <Avatar src={user!.photoURL || undefined} marginEnd={3} />
+          <Text>{user!.displayName}</Text>
         </Flex>
 
         <IconButton
@@ -82,7 +109,7 @@ export function Sidebar() {
         sx={{ scrollbarWidth: "none" }}
         flex={1}
       >
-        {/* {chatList()} */}
+        {chatList()}
       </Flex>
     </Flex>
   );
