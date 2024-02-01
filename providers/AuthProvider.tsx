@@ -1,15 +1,16 @@
 "use client";
 
-import React, { ReactNode, useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { Center, ChakraProvider, Spinner } from "@chakra-ui/react";
+import { ReactNode, useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 import { auth } from "@/firebaseconfig";
-import { Login } from "@/components/pages";
+import { useRouter } from "next/navigation";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, loading, error] = useAuthState(auth);
   const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
 
   if (process.env.NODE_ENV === "development") {
     console.log("🚀 @log ~ AuthProvider ~ user:", user);
@@ -33,7 +34,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     if (!user) {
-      return <Login />;
+      router.push("/login");
+    } else {
+      router.push("/");
     }
     return children;
   };

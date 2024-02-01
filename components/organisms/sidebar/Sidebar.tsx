@@ -43,14 +43,17 @@ export function Sidebar() {
 
   const newChat = async () => {
     const input = prompt("Enter email of chat recipient") || "";
-    if (!chatExists(input) && input != user.email) {
+    if (!!input && !chatExists(input) && input != user.email) {
       await addDoc(collection(db, "chats"), { users: [user.email, input] });
     }
   };
 
   const chatList = () => {
     return chats
-      ?.filter((chat: any) => chat?.users.includes(user!.email))
+      ?.filter(
+        (chat: any) =>
+          chat?.users.includes(user!.email) && !chat?.users.includes("")
+      )
       .map((chat: any) => (
         <Flex
           key={Math.random()}
